@@ -12,7 +12,7 @@ import {
 } from "@/lib/auth";
 import { useSignUp } from "@clerk/expo";
 import type { SignUpSignalValue } from "@clerk/expo/types";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { clsx } from "clsx";
 import { Pressable, Text, View } from "react-native";
@@ -36,6 +36,7 @@ type LocalErrors = {
 
 const SignUp = () => {
     const router = useRouter();
+    const { returnTo } = useLocalSearchParams<{ returnTo?: string | string[] }>();
     const { errors, fetchStatus, signUp } = useSignUp() as unknown as SignUpHookState;
 
     const [emailAddress, setEmailAddress] = React.useState("");
@@ -86,6 +87,7 @@ const SignUp = () => {
                 router,
                 params,
                 onSessionTask: (message) => setNotice({ message, tone: "error" }),
+                returnTo,
             }),
         });
 
@@ -201,6 +203,8 @@ const SignUp = () => {
 
     const handleStartOver = async () => {
         await signUp.reset();
+        setEmailAddress("");
+        setPassword("");
         setCode("");
         setLocalErrors({});
         setNotice(null);
@@ -209,7 +213,7 @@ const SignUp = () => {
     return (
         <AuthScreen
             footerCopy="Already have an account?"
-            footerHref="/sign-in"
+            footerHref={returnTo ? { pathname: "/sign-in", params: { returnTo } } : "/sign-in"}
             footerLinkLabel="Sign in"
             subtitle={isVerificationStep
                 ? "Secure your new account with a quick email check."
