@@ -1,9 +1,10 @@
 import "@/global.css"
+import { useUser } from "@clerk/expo";
 import {FlatList, Image, Text, View} from "react-native";
 import {SafeAreaView as RNSafeAreaView} from "react-native-safe-area-context";
 import {styled} from "nativewind";
 import images from "@/constants/images";
-import {HOME_BALANCE, HOME_SUBSCRIPTIONS, HOME_USER, UPCOMING_SUBSCRIPTIONS} from "@/constants/data";
+import {HOME_BALANCE, HOME_SUBSCRIPTIONS, UPCOMING_SUBSCRIPTIONS} from "@/constants/data";
 import {icons} from "@/constants/icons";
 import {formatCurrency} from "@/lib/utils";
 import dayjs from "dayjs";
@@ -15,7 +16,14 @@ import React from "react";
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
+    const { user } = useUser();
     const [expandedSubscriptionId, setExpandedSubscriptionId] = React.useState<string | null>(null);
+    const displayName = user?.fullName?.trim()
+        || user?.firstName?.trim()
+        || user?.username?.trim()
+        || user?.primaryEmailAddress?.emailAddress
+        || "Recurly member";
+    const avatarSource = user?.imageUrl ? { uri: user.imageUrl } : images.avatar;
 
     return (
         <SafeAreaView className="flex-1 bg-background p-5">
@@ -24,8 +32,10 @@ export default function App() {
                         <>
                             <View className="home-header">
                                 <View className="home-user">
-                                    <Image source={images.avatar} className="home-avatar" />
-                                    <Text className="home-user-name">{HOME_USER.name}</Text>
+                                    <Image source={avatarSource} className="home-avatar" />
+                                    <Text className="home-user-name" numberOfLines={1} ellipsizeMode="tail">
+                                        {displayName}
+                                    </Text>
                                 </View>
                                 <View className="home-add-icon">
                                     <Image source={icons.add} className="size-5" />

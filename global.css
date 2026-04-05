@@ -67,7 +67,7 @@
     }
 
     .home-user {
-        @apply flex-row items-center;
+        @apply min-w-0 flex-1 flex-row items-center;
     }
 
     .home-avatar {
@@ -75,7 +75,7 @@
     }
 
     .home-user-name {
-        @apply ml-4 text-2xl font-sans-bold text-primary;
+        @apply ml-4 flex-1 text-2xl font-sans-bold text-primary;
     }
 
     .home-add-icon {
@@ -290,12 +290,44 @@
         @apply text-sm font-sans-semibold text-primary;
     }
 
+    .auth-input-wrap {
+        @apply relative;
+    }
+
     .auth-input {
         @apply rounded-2xl border border-border bg-background px-4 py-4 text-base font-sans-medium text-primary;
     }
 
+    .auth-input-with-action {
+        @apply pr-18;
+    }
+
+    .auth-input-action {
+        @apply absolute inset-y-0 right-4 items-center justify-center;
+    }
+
+    .auth-input-action-text {
+        @apply text-sm font-sans-semibold text-primary/70;
+    }
+
     .auth-input-error {
         @apply border-destructive;
+    }
+
+    .auth-banner {
+        @apply mb-4 rounded-2xl border px-4 py-3;
+    }
+
+    .auth-banner-info {
+        @apply border-accent/20 bg-accent/10;
+    }
+
+    .auth-banner-error {
+        @apply border-destructive/20 bg-destructive/10;
+    }
+
+    .auth-banner-text {
+        @apply text-sm font-sans-medium leading-6 text-primary;
     }
 
     .auth-error {
@@ -304,6 +336,10 @@
 
     .auth-helper {
         @apply text-sm font-sans-medium text-muted-foreground;
+    }
+
+    .auth-verify-copy {
+        @apply mb-5 text-sm font-sans-medium leading-6 text-muted-foreground;
     }
 
     .auth-button {
