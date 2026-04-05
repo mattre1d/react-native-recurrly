@@ -1,6 +1,6 @@
 import {View, Text, Image, Pressable} from 'react-native'
 import {formatCurrency, formatSubscriptionDateTime} from "@/lib/utils";
-import clsx from "clsx";
+import { clsx } from "clsx";
 
 const SubscriptionCard = ({ name, price, currency, icon, billing, color, category, plan, renewalDate, expanded, onPress, paymentMethod }: SubscriptionCardProps) => {
     return (
