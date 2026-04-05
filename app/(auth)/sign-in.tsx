@@ -12,7 +12,7 @@ import {
 } from "@/lib/auth";
 import { useSignIn } from "@clerk/expo";
 import type { SignInSignalValue } from "@clerk/expo/types";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { clsx } from "clsx";
 import { Pressable, Text, View } from "react-native";
@@ -36,6 +36,7 @@ type LocalErrors = {
 
 const SignIn = () => {
     const router = useRouter();
+    const { returnTo } = useLocalSearchParams<{ returnTo?: string | string[] }>();
     const { errors, fetchStatus, signIn } = useSignIn() as unknown as SignInHookState;
 
     const [identifier, setIdentifier] = React.useState("");
@@ -83,6 +84,7 @@ const SignIn = () => {
                 router,
                 params,
                 onSessionTask: (message) => setNotice({ message, tone: "error" }),
+                returnTo,
             }),
         });
 
@@ -229,7 +231,7 @@ const SignIn = () => {
     return (
         <AuthScreen
             footerCopy="New to Recurly?"
-            footerHref="/sign-up"
+            footerHref={returnTo ? { pathname: "/sign-up", params: { returnTo } } : "/sign-up"}
             footerLinkLabel="Create an account"
             subtitle={isVerificationStep
                 ? "Confirm it’s really you so we can keep your billing data secure."

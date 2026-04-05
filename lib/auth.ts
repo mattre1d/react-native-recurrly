@@ -82,21 +82,49 @@ export const getSessionTaskMessage = (task: SessionTaskLike): string => {
     }
 };
 
+const normalizeReturnToParam = (returnTo?: string | string[]): string | null => {
+    const rawValue = Array.isArray(returnTo) ? returnTo[0] : returnTo;
+    if (!rawValue) {
+        return null;
+    }
+
+    let decodedValue = rawValue.trim();
+
+    try {
+        decodedValue = decodeURIComponent(decodedValue);
+    } catch {
+        return null;
+    }
+
+    if (!decodedValue.startsWith("/") || decodedValue.startsWith("//")) {
+        return null;
+    }
+
+    if (decodedValue.startsWith("/sign-in") || decodedValue.startsWith("/sign-up")) {
+        return null;
+    }
+
+    return decodedValue;
+};
+
 export const navigateAfterAuth = async ({
     router,
     params,
     onSessionTask,
+    returnTo,
 }: {
     router: Router;
     params: AuthNavigateParams;
     onSessionTask: (message: string) => void;
+    returnTo?: string | string[];
 }): Promise<void> => {
     if (params.session?.currentTask) {
         onSessionTask(getSessionTaskMessage(params.session.currentTask));
         return;
     }
 
-    const url = params.decorateUrl("/");
+    const destination = normalizeReturnToParam(returnTo) || "/";
+    const url = params.decorateUrl(destination);
     if (url.startsWith("http")) {
         await Linking.openURL(url);
         return;

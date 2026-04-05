@@ -1,7 +1,7 @@
 import { useClerk, useUser } from "@clerk/expo";
 import { clsx } from "clsx";
 import React from "react";
-import { Pressable, Text, View } from 'react-native'
+import { Alert, Pressable, Text, View } from 'react-native'
 import {SafeAreaView as RNSafeAreaView} from "react-native-safe-area-context";
 import {styled} from "nativewind";
 
@@ -20,6 +20,12 @@ const Settings = () => {
         try {
             setIsSigningOut(true);
             await signOut();
+        } catch (error) {
+            console.warn("Failed to sign out", error);
+            Alert.alert(
+                "Sign out unavailable",
+                "We could not sign you out right now. Please try again in a moment.",
+            );
         } finally {
             setIsSigningOut(false);
         }
